@@ -151,3 +151,15 @@ TEST("(Social Links) A maxed Pokémon link boosts its own type")
     EXPECT_EQ(SocialLink_GetShinyRollsForSpecies(SPECIES_MUDKIP), 0);
     ResetSocialLinkTestState();
 }
+
+TEST("(Social Links) Fae is a Ground-type NPC link that starts capped at rank 2")
+{
+    ResetSocialLinkTestState();
+    EXPECT_EQ(gSocialLinksInfo[SOCIAL_LINK_FAE].kind, SOCIAL_LINK_KIND_NPC);
+    EXPECT_EQ(SocialLink_GetType(SOCIAL_LINK_FAE), TYPE_GROUND);
+    EXPECT_EQ(SocialLink_GetRankCap(SOCIAL_LINK_FAE), 2);
+
+    FlagSet(FLAG_BADGE01_GET);
+    EXPECT_EQ(SocialLink_GetRankCap(SOCIAL_LINK_FAE), 3);
+    ResetSocialLinkTestState();
+}

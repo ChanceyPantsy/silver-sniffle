@@ -30,8 +30,9 @@
 #define SOCIAL_LINK_PHOEBE          17
 #define SOCIAL_LINK_GLACIA          18
 #define SOCIAL_LINK_DRAKE           19
+#define SOCIAL_LINK_FAE             20
 
-#define NUM_SOCIAL_LINKS            20
+#define NUM_SOCIAL_LINKS            21
 
 #define SOCIAL_LINK_KIND_NPC         0
 #define SOCIAL_LINK_KIND_POKEMON     1
@@ -41,5 +42,9 @@
 // Return values of sociallink_bindpartymon / sociallink_bindspecies (written to VAR_RESULT).
 #define SOCIAL_LINK_BIND_FAILED      0
 #define SOCIAL_LINK_BIND_OK          1
+
+// VAR_FAE_STATE values
+#define FAE_STATE_NOT_MET            0
+#define FAE_STATE_MET_ROUTE_103      1
 
 #endif // GUARD_CONSTANTS_SOCIAL_LINKS_H

@@ -42,3 +42,14 @@ EVs: 252 Atk / 252 SpA / 6 SpD
 - Protect
 - Solar Beam
 - Dragon Claw
+
+=== PARTNER_FAE ===
+Name: FAE
+Class: Pkmn Trainer 1
+Pic: Picnicker
+Gender: Female
+Music: Female
+AI: Basic Trainer
+
+Trapinch
+Level: 6

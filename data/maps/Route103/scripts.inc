@@ -351,3 +351,184 @@ Route103_Text_RouteSign:
 	.string "ROUTE 103\n"
 	.string "{DOWN_ARROW} OLDALE TOWN$"
 
+
+@ Fae: granddaughter of the Mt. Pyre orb keepers. See SOCIAL_LINK_FAE.
+
+Route103_EventScript_FaeIntroTrigger::
+	lockall
+	playse SE_PIN
+	applymovement LOCALID_ROUTE103_FAE, Common_Movement_ExclamationMark
+	waitmovement 0
+	applymovement LOCALID_ROUTE103_FAE, Common_Movement_FaceDown
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
+	waitmovement 0
+	call Route103_EventScript_FaeIntro
+	releaseall
+	end
+
+Route103_EventScript_FaeIntro::
+	setspeaker SP_NAME_FAE
+	msgbox Route103_Text_FaeCallsOut, MSGBOX_DEFAULT
+	closemessage
+	playmoncry SPECIES_POOCHYENA, CRY_MODE_ENCOUNTER
+	waitmoncry
+	setspeaker SP_NAME_FAE
+	msgbox Route103_Text_FaeTheyreHere, MSGBOX_DEFAULT
+	closemessage
+	special ZeroEnemyPartyMons
+	createmon 1, 0, SPECIES_POOCHYENA, 3
+	createmon 1, 1, SPECIES_ZIGZAGOON, 3
+	special SavePlayerParty
+	setmultitrainerbattle TRAINER_NONE, NULL, TRAINER_NONE, NULL, PARTNER_FAE
+	multi_do_fixed MULTI_BATTLE_2_VS_WILD
+	setvar VAR_FAE_STATE, FAE_STATE_MET_ROUTE_103
+	sociallink_setrank SOCIAL_LINK_FAE, 1
+	setspeaker SP_NAME_FAE
+	msgbox Route103_Text_FaeIntroduction, MSGBOX_DEFAULT
+	giveitem ITEM_POTION, 2
+	setspeaker SP_NAME_FAE
+	msgbox Route103_Text_FaeComeFindMe, MSGBOX_DEFAULT
+	return
+
+Route103_EventScript_Fae::
+	lock
+	faceplayer
+	goto_if_eq VAR_FAE_STATE, FAE_STATE_NOT_MET, Route103_EventScript_FaeIntroByTalking
+	sociallink_getrank SOCIAL_LINK_FAE
+	copyvar VAR_0x8004, VAR_RESULT
+	sociallink_getrankcap SOCIAL_LINK_FAE
+	goto_if_ge VAR_0x8004, VAR_RESULT, Route103_EventScript_FaeAtRankCap
+	setspeaker SP_NAME_FAE
+	msgbox Route103_Text_FaeHangOut, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, Route103_EventScript_FaeDeclineHangOut
+	closemessage
+	fadescreen FADE_TO_BLACK
+	delay 30
+	fadescreen FADE_FROM_BLACK
+	setspeaker SP_NAME_FAE
+	call_if_le VAR_0x8004, 1, Route103_EventScript_FaeScene_Orbs
+	call_if_ge VAR_0x8004, 2, Route103_EventScript_FaeScene_Trapinch
+	sociallink_addpoints SOCIAL_LINK_FAE, 8
+	call_if_eq VAR_RESULT, TRUE, Route103_EventScript_FaeRankUp
+	release
+	end
+
+Route103_EventScript_FaeIntroByTalking::
+	call Route103_EventScript_FaeIntro
+	release
+	end
+
+Route103_EventScript_FaeDeclineHangOut::
+	setspeaker SP_NAME_FAE
+	msgbox Route103_Text_FaeDeclined, MSGBOX_DEFAULT
+	release
+	end
+
+Route103_EventScript_FaeAtRankCap::
+	setspeaker SP_NAME_FAE
+	msgbox Route103_Text_FaeGoAdventure, MSGBOX_DEFAULT
+	release
+	end
+
+Route103_EventScript_FaeScene_Orbs::
+	msgbox Route103_Text_FaeSceneOrbs, MSGBOX_DEFAULT
+	return
+
+Route103_EventScript_FaeScene_Trapinch::
+	msgbox Route103_Text_FaeSceneTrapinch, MSGBOX_DEFAULT
+	return
+
+@ Fae gives a small gift the first time her link reaches certain ranks.
+Route103_EventScript_FaeRankUp::
+	sociallink_getrank SOCIAL_LINK_FAE
+	copyvar VAR_0x8005, VAR_RESULT
+	buffernumberstring STR_VAR_1, VAR_0x8005
+	setspeaker SP_NAME_NONE
+	playfanfare MUS_LEVEL_UP
+	msgbox Route103_Text_FaeBondGrew, MSGBOX_DEFAULT
+	waitfanfare
+	goto_if_eq VAR_0x8005, 2, Route103_EventScript_FaeGiftRank2
+	return
+
+Route103_EventScript_FaeGiftRank2::
+	setspeaker SP_NAME_FAE
+	msgbox Route103_Text_FaeGiftSoftSand, MSGBOX_DEFAULT
+	giveitem ITEM_SOFT_SAND
+	return
+
+Route103_Text_FaeCallsOut:
+	.string "Hey! You, with the Pokémon!\n"
+	.string "Don't move… Something's in\l"
+	.string "the grass behind you!$"
+
+Route103_Text_FaeTheyreHere:
+	.string "Two of them! I can't handle both\n"
+	.string "on my own. Fight with me, okay?$"
+
+Route103_Text_FaeIntroduction:
+	.string "Whew… We make a good team!\p"
+	.string "I'm FAE. I'm staying with my aunt\n"
+	.string "in OLDALE for a while.\p"
+	.string "My grandparents look after MT. PYRE,\n"
+	.string "way out past the city of LILYCOVE.\p"
+	.string "Grandpa says a keeper should know\n"
+	.string "the land she's meant to protect,\l"
+	.string "so here I am, learning!\p"
+	.string "You're the new kid in LITTLEROOT,\n"
+	.string "right? Thanks for helping me.\l"
+	.string "Here, take these!$"
+
+Route103_Text_FaeComeFindMe:
+	.string "I'll be around here, training with\n"
+	.string "TRAPINCH. Come talk anytime!\p"
+	.string "And {PLAYER}… I've got a good\n"
+	.string "feeling about you. I mean it!$"
+
+Route103_Text_FaeHangOut:
+	.string "Hi, {PLAYER}! Want to sit and\n"
+	.string "talk for a bit?$"
+
+Route103_Text_FaeDeclined:
+	.string "That's okay! Go show them what\n"
+	.string "you can do. I'm cheering for you!$"
+
+Route103_Text_FaeGoAdventure:
+	.string "I feel like we've talked about\n"
+	.string "everything for now!\p"
+	.string "Go out there and make some new\n"
+	.string "stories. Then come tell me all\l"
+	.string "about them, okay?$"
+
+Route103_Text_FaeSceneOrbs:
+	.string "When I was little, Grandma told me\n"
+	.string "a story every night.\p"
+	.string "Long ago, a giant of the land and\n"
+	.string "a giant of the sea fought until\l"
+	.string "the whole world was ending.\p"
+	.string "Two orbs calmed them down. One red,\n"
+	.string "one blue. They're kept at the top\l"
+	.string "of MT. PYRE, even now.\p"
+	.string "I used to think it was just a\n"
+	.string "bedtime story…\p"
+	.string "But Grandpa never smiles when he\n"
+	.string "talks about it. Isn't that weird?$"
+
+Route103_Text_FaeSceneTrapinch:
+	.string "TRAPINCH was the first Pokémon\n"
+	.string "Grandpa ever gave me.\p"
+	.string "He said Ground types remember\n"
+	.string "everything the land has seen.\p"
+	.string "I think that's why it's so stubborn.\n"
+	.string "It's carrying a lot of memories!\p"
+	.string "…Hey, {PLAYER}. Thanks for always\n"
+	.string "listening to me ramble.$"
+
+Route103_Text_FaeBondGrew:
+	.string "Your bond with FAE grew stronger!\n"
+	.string "(Rank {STR_VAR_1})$"
+
+Route103_Text_FaeGiftSoftSand:
+	.string "Oh! I want you to have this.\p"
+	.string "It's sand from the foot of MT. PYRE.\n"
+	.string "Grandma says it brings good luck\l"
+	.string "to Ground-type moves!$"

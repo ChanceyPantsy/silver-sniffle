@@ -106,6 +106,16 @@ const struct SocialLinkInfo gSocialLinksInfo[NUM_SOCIAL_LINKS] =
     [SOCIAL_LINK_PHOEBE] = ELITE_FOUR_LINK("Phoebe", TYPE_GHOST),
     [SOCIAL_LINK_GLACIA] = ELITE_FOUR_LINK("Glacia", TYPE_ICE),
     [SOCIAL_LINK_DRAKE]  = ELITE_FOUR_LINK("Drake", TYPE_DRAGON),
+
+    // Granddaughter of the Mt. Pyre orb keepers. Raised by her scenes and by partner battles with her.
+    [SOCIAL_LINK_FAE] =
+    {
+        .name = COMPOUND_STRING("Fae"),
+        .kind = SOCIAL_LINK_KIND_NPC,
+        .type = TYPE_GROUND,
+        .baseRankCap = 2,
+        .gates = sSocialLinkGates_Story,
+    },
 };
 
 #undef POKEMON_LINK
