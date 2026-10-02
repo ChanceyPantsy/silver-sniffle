@@ -3011,3 +3011,55 @@
 	getbraillestringwidth \text
 	call EventScript_BrailleCursorWaitButton
 	.endm
+
+	@ Social links. linkId and the other arguments can be values or variables.
+	@ See include/constants/social_links.h and src/data/social_links.h.
+
+	@ Adds points to a social link, up to its current rank cap.
+	@ Sets VAR_RESULT to TRUE if the link went up at least one rank.
+	.macro sociallink_addpoints linkId:req, points:req
+	callnative ScrCmd_sociallink_addpoints, requests_effects=1
+	.2byte \linkId
+	.2byte \points
+	.endm
+
+	@ Sets VAR_RESULT to the current rank of a social link (0 to SOCIAL_LINK_MAX_RANK).
+	.macro sociallink_getrank linkId:req
+	callnative ScrCmd_sociallink_getrank, requests_effects=1
+	.2byte \linkId
+	.endm
+
+	@ Sets VAR_RESULT to the highest rank a social link can currently reach.
+	.macro sociallink_getrankcap linkId:req
+	callnative ScrCmd_sociallink_getrankcap, requests_effects=1
+	.2byte \linkId
+	.endm
+
+	@ Sets a social link to the start of a rank, ignoring its rank cap.
+	.macro sociallink_setrank linkId:req, rank:req
+	callnative ScrCmd_sociallink_setrank, requests_effects=1
+	.2byte \linkId
+	.2byte \rank
+	.endm
+
+	@ Ties a Pokémon social link to the Pokémon in a party slot.
+	@ Sets VAR_RESULT to SOCIAL_LINK_BIND_OK or SOCIAL_LINK_BIND_FAILED.
+	.macro sociallink_bindpartymon linkId:req, slot:req
+	callnative ScrCmd_sociallink_bindpartymon, requests_effects=1
+	.2byte \linkId
+	.2byte \slot
+	.endm
+
+	@ Ties a Pokémon social link to the first unlinked Pokémon of a species in the party, then the PC.
+	@ Sets VAR_RESULT to SOCIAL_LINK_BIND_OK or SOCIAL_LINK_BIND_FAILED.
+	.macro sociallink_bindspecies linkId:req, species:req
+	callnative ScrCmd_sociallink_bindspecies, requests_effects=1
+	.2byte \linkId
+	.2byte \species
+	.endm
+
+	@ Sets VAR_RESULT to the party slot of the Pokémon tied to a social link, or PARTY_SIZE if it isn't in the party.
+	.macro sociallink_getpartyslot linkId:req
+	callnative ScrCmd_sociallink_getpartyslot, requests_effects=1
+	.2byte \linkId
+	.endm

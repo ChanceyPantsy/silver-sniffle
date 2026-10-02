@@ -26,6 +26,7 @@
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "config/save.h"
+#include "constants/social_links.h"
 
 // Prevent cross-jump optimization.
 #define BLOCK_CROSS_JUMP asm("");
@@ -254,8 +255,24 @@ struct NPCFollower
 #include "constants/items.h"
 #define ITEM_FLAGS_COUNT ((ITEMS_COUNT / 8) + ((ITEMS_COUNT % 8) ? 1 : 0))
 
+struct SocialLinkMonBinding
+{
+    u32 personality;
+    u32 otId;
+    u8 type; // enum Type, the bound Pokémon's primary type when it was bound
+    u8 isBound:1;
+    u8 padding:7;
+};
+
+struct SocialLinkSaveData
+{
+    u16 points[NUM_SOCIAL_LINKS];
+    struct SocialLinkMonBinding mons[NUM_POKEMON_SOCIAL_LINKS];
+};
+
 struct SaveBlock3
 {
+    struct SocialLinkSaveData socialLinks;
 #if OW_USE_FAKE_RTC
     struct SiiRtcInfo fakeRTC;
 #endif

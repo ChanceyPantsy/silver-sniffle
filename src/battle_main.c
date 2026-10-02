@@ -78,6 +78,7 @@
 #include "constants/trainers.h"
 #include "constants/weather.h"
 #include "cable_club.h"
+#include "social_links.h"
 
 extern const struct BgTemplate gBattleBgTemplates[];
 extern const struct WindowTemplate *const gBattleWindowTemplates[];
@@ -2764,6 +2765,7 @@ static void BattleStartClearSetData(void)
     memset(&gSideTimers, 0, sizeof(gSideTimers));
     memset(&gBattleResults, 0, sizeof(gBattleResults));
     ClearSetBScriptingStruct();
+    SocialLink_OnBattleStart();
 
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
@@ -5267,6 +5269,7 @@ static void HandleEndTurn_FinishBattle(void)
                         HandleSetPokedexFlagFromMon(&party[partySlot], FLAG_SET_SEEN);
                 }
             }
+            SocialLink_OnBattleEnd();
         }
 
         if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK

@@ -76,6 +76,7 @@
 #include "constants/trainers.h"
 #include "constants/union_room.h"
 #include "constants/weather.h"
+#include "social_links.h"
 
 extern enum Item gSpecialVar_ItemId;
 
@@ -866,7 +867,7 @@ void CreateMonWithIVs(struct Pokemon *mon, enum Species species, u8 level, u32 p
     CalculateMonStats(mon);
 }
 
-bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
+bool32 ComputePlayerShinyOdds(enum Species species, u32 personality, u32 value)
 {
     if (FlagGet(P_FLAG_FORCE_NO_SHINY))
         return FALSE;
@@ -892,6 +893,8 @@ bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
 
     if (gDexNavSpecies)
         totalRerolls += CalculateDexNavShinyRolls();
+
+    totalRerolls += SocialLink_GetShinyRollsForSpecies(species);
 
     while (GET_SHINY_VALUE(value, personality) >= SHINY_ODDS && totalRerolls > 0)
     {
@@ -988,7 +991,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, enum Species species, u8 level, u32
     else // Player is the OT
     {
         value = READ_OTID_FROM_SAVE;
-        isShiny = ComputePlayerShinyOdds(personality, value);
+        isShiny = ComputePlayerShinyOdds(species, personality, value);
     }
 
     SetBoxMonData(boxMon, MON_DATA_PERSONALITY, &personality);

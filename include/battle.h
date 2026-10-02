@@ -556,7 +556,8 @@ struct PartyState
     u32 sentOut:1;
     u32 isKnockedOff:1;
     u32 freezeTurns:2;
-    u32 padding:3;
+    u32 fainted:1;
+    u32 padding:2;
     enum Item usedHeldItem;
 };
 

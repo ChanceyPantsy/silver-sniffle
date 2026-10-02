@@ -11175,6 +11175,7 @@ void SetValuesOnFaint(enum BattlerId battler)
 
     if (gBattleStruct->faintCounter[GetBattlerTrainer(battler)] < 255)
         gBattleStruct->faintCounter[GetBattlerTrainer(battler)]++;
+    GetBattlerPartyState(battler)->fainted = TRUE;
 
     if (IsOnPlayerSide(battler))
     {

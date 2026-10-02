@@ -1,53 +1,101 @@
-# About `pokeemerald-expansion`
+# silver-sniffle
 
-![Gif that shows debugging functionality that is unique to pokeemerald-expansion such as rerolling Trainer ID, Cheat Start, PC from Debug Menu, Debug PC Fill, Pokémon Sprite Visualizer, Debug Warp to Map, and Battle Debug Menu](https://github.com/user-attachments/assets/cf9dfbee-4c6b-4bca-8e0a-07f116ef891c) ![Gif that shows overworld functionality that is unique to pokeemerald-expansion such as indoor running, BW2 style map popups, overworld followers, DNA Splicers, Gen 1 style fishing, OW Item descriptions, Quick Run from Battle, Use Last Ball, Wild Double Battles, and Catch from EXP](https://github.com/user-attachments/assets/383af243-0904-4d41-bced-721492fbc48e) ![Gif that shows off a number of modern Pokémon battle mechanics happening in the pokeemerald-expansion engine: 2 vs 1 battles, modern Pokémon, items, moves, abilities, fully customizable opponents and partners, Trainer Slides, and generational gimmicks](https://github.com/user-attachments/assets/50c576bc-415e-4d66-a38f-ad712f3316be)
+A Pokémon Emerald ROM hack with Pokémon from every generation and a **social link** system.
 
-<!-- If you want to re-record or change these gifs, here are some notes that I used: https://files.catbox.moe/05001g.md -->
-
-**`pokeemerald-expansion`** is a GBA ROM hack base that equips developers with a comprehensive toolkit for creating Pokémon ROM hacks. **`pokeemerald-expansion`** is built on top of [pret's `pokeemerald`](https://github.com/pret/pokeemerald) decompilation project. **It is not a playable Pokémon game on its own.**
-
-# [Features](FEATURES.md)
-
-**`pokeemerald-expansion`** offers hundreds of features from various [core series Pokémon games](https://bulbapedia.bulbagarden.net/wiki/Core_series), along with popular quality-of-life enhancements designed to streamline development and improve the player experience. A full list of those features can be found in [`FEATURES.md`](FEATURES.md).
-
-# [Credits](CREDITS.md)
-
- [![](https://img.shields.io/github/all-contributors/rh-hideout/pokeemerald-expansion/upcoming)](CREDITS.md)
-
-If you use **`pokeemerald-expansion`**, please credit **RHH (Rom Hacking Hideout)**. Optionally, include the version number for clarity.
-
-```
 Based off RHH's pokeemerald-expansion 1.17.1 https://github.com/rh-hideout/pokeemerald-expansion/
+
+The expansion provides all Gen 1–9 species, their learnsets, sprites (front, back, icon, follower and shiny) and modern battle mechanics. See [`FEATURES.md`](FEATURES.md) for everything it includes and [`CREDITS.md`](CREDITS.md) for its contributors.
+
+## Building
+
+Follow [`INSTALL.md`](INSTALL.md). On Debian/Ubuntu the short version is:
+
+```sh
+sudo apt install build-essential binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
+make -j$(nproc)            # builds pokeemerald.gba
+make check -j$(nproc)      # runs the test suite
+make check TESTS="(Social Links)"   # runs only the social link tests
 ```
 
-Please consider [crediting all contributors](CREDITS.md) involved in the project!
+Never commit or share the built `.gba`. Release the hack as a patch (`.bps`/`.ups`) made against a clean Emerald ROM.
 
-# Choosing `pokeemerald` or **`pokeemerald-expansion`**
+## Pulling in newer expansion releases
 
-- **`pokeemerald-expansion`** supports multiplayer functionality with other games built on **`pokeemerald-expansion`**. It is not compatible with official Pokémon games.
-- If compatibility with official games is important, use [`pokeemerald`](https://github.com/pret/pokeemerald). Otherwise, we recommend using **`pokeemerald-expansion`**.
-- **`pokeemerald-expansion`** incorporates regular updates from `pokeemerald`, including bug fixes and documentation improvements.
+```sh
+git remote add upstream https://github.com/rh-hideout/pokeemerald-expansion.git   # once
+git fetch upstream --tags
+git merge expansion/<version>
+```
 
-# [Getting Started](INSTALL.md)
+## Social links
 
-❗❗ **Important**: Do not use GitHub's "Download Zip" option as it will not include commit history. This is necessary if you want to update or merge other feature branches.
+Social links are relationships that rank up from 0 to 10 (`SOCIAL_LINK_MAX_RANK`). When a link is maxed, every wild or gift Pokémon that shares the link's type gets `SOCIAL_LINK_MAXED_SHINY_ROLLS` extra shiny rolls, the same mechanism as the Shiny Charm. Links of other types don't help, and maxed links of the same type stack.
 
-If you're new to git and GitHub, [Team Aqua's Asset Repo](https://github.com/Pawkkie/Team-Aquas-Asset-Repo/) has a [guide to forking and cloning the repository](https://github.com/Pawkkie/Team-Aquas-Asset-Repo/wiki/The-Basics-of-GitHub). Then you can follow one of the following guides:
+| File | What's in it |
+| --- | --- |
+| `include/constants/social_links.h` | Link IDs |
+| `src/data/social_links.h` | The roster: name, type and rank caps for each link |
+| `include/config/social_links.h` | Point values and the shiny bonus |
+| `src/social_links.c` | Implementation |
 
-## 📥 [Installing **`pokeemerald-expansion`**](INSTALL.md)
-## 🏗️ [Building **`pokeemerald-expansion`**](INSTALL.md#Building-pokeemerald-expansion)
-## 🚚 [Migrating from **`pokeemerald`**](INSTALL.md#Migrating-from-pokeemerald)
-## 🚀 [Updating **`pokeemerald-expansion`**](INSTALL.md#Updating-pokeemerald-expansion)
+### Kinds of links
 
-# [Documentation](https://rh-hideout.github.io/pokeemerald-expansion/)
+- **Pokémon links** (`SOCIAL_LINK_STARTER`, `SOCIAL_LINK_EVENT_MON_1`–`4`) are tied to one specific Pokémon. Their type is that Pokémon's primary type when it was linked. The starter is linked automatically on Route 101. Link event Pokémon, such as gifts or guaranteed legendaries, from their event scripts. These links grow at the end of every battle:
+  - Sent out in a won battle (or one where a Pokémon was caught): `SOCIAL_LINK_POINTS_BATTLE`, +`SOCIAL_LINK_POINTS_TRAINER_BONUS` against trainers.
+  - Sent out and never fainted that battle: +`SOCIAL_LINK_POINTS_NO_FAINT`.
+  - Each level gained during the battle: +`SOCIAL_LINK_POINTS_LEVEL_UP`.
 
-For detailed documentation, visit the [pokeemerald-expansion documentation page](https://rh-hideout.github.io/pokeemerald-expansion/).
+  Link battles, the Battle Frontier and Trainer Hill don't count.
+- **NPC links** (rival, Wally, Steven, gym leaders, Elite Four) only grow when an event script says so. That way each NPC can have its own way of earning points: talking, gifts, battles, side quests.
 
-# [Contributions](CONTRIBUTING.md)
-If you are looking to [report a bug](CONTRIBUTING.md#Bug-Report), [open a pull request](CONTRIBUTING.md#Pull-Requests), or [request a feature](CONTRIBUTING.md#Feature-Request), our [`CONTRIBUTING.md`](CONTRIBUTING.md) has guides for each.
+### Rank caps
 
-# [Community](https://discord.gg/6CzjAG6GZk)
+A link can't rank up past its current cap; points over the cap are discarded. Caps come from flags, so they follow story progress. By default:
+- Pokémon links, the rival, Wally and Steven start at 2 and gain about one rank per badge, reaching 10 after the Hall of Fame.
+- Gym leaders cap at 3, then 7 after you beat their gym, then 10 after the Hall of Fame.
+- The Elite Four cap at 3 until the Hall of Fame.
 
-[![](https://dcbadge.limes.pink/api/server/6CzjAG6GZk)](https://discord.gg/6CzjAG6GZk)
+To change a cap, edit the gate lists in `src/data/social_links.h`. Any flag works as a gate, so cutscenes and side events can raise caps too.
 
-Our community uses the [ROM Hacking Hideout (RHH) Discord server](https://discord.gg/6CzjAG6GZk) to communicate and organize. Most of our discussions take place there, and we welcome anybody to join us!
+### Script commands
+
+All arguments accept values or variables.
+
+```
+sociallink_addpoints SOCIAL_LINK_ROXANNE, 10       @ VAR_RESULT = TRUE if it ranked up
+sociallink_getrank SOCIAL_LINK_ROXANNE             @ VAR_RESULT = rank
+sociallink_getrankcap SOCIAL_LINK_ROXANNE          @ VAR_RESULT = current cap
+sociallink_setrank SOCIAL_LINK_ROXANNE, 5          @ ignores the cap, for story moments
+sociallink_bindpartymon SOCIAL_LINK_EVENT_MON_1, 0 @ link the Pokémon in party slot 0
+sociallink_bindspecies SOCIAL_LINK_EVENT_MON_1, SPECIES_GROUDON  @ party first, then PC
+sociallink_getpartyslot SOCIAL_LINK_STARTER        @ VAR_RESULT = slot, or PARTY_SIZE
+```
+
+The bind commands set `VAR_RESULT` to `SOCIAL_LINK_BIND_OK` or `SOCIAL_LINK_BIND_FAILED`. Binding fails if the link is already bound or the Pokémon already has a link.
+
+For example, an NPC that deepens its link when you talk to it:
+
+```
+	sociallink_addpoints SOCIAL_LINK_WALLY, 5
+	goto_if_eq VAR_RESULT, TRUE, Wally_EventScript_RankUp
+```
+
+Linking a legendary after a scripted encounter:
+
+```
+	dowildbattle
+	specialvar VAR_RESULT, GetBattleOutcome
+	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Groudon_EventScript_NotCaught
+	sociallink_bindspecies SOCIAL_LINK_EVENT_MON_1, SPECIES_GROUDON
+```
+
+### Adding a link
+
+1. Add an ID in `include/constants/social_links.h` and bump `NUM_SOCIAL_LINKS`. Pokémon links must stay at the start of the list (update `NUM_POKEMON_SOCIAL_LINKS`).
+2. Add its entry to `gSocialLinksInfo` in `src/data/social_links.h`.
+
+Changing the number of links changes the save layout, so start a new save afterwards.
+
+## Legal
+
+Pokémon and all related names and artwork are property of Nintendo, Game Freak and The Pokémon Company. This is a non-commercial fan project. Don't charge for it or accept money tied to it.
