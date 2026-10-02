@@ -385,6 +385,7 @@ Route103_EventScript_FaeIntro::
 	sociallink_setrank SOCIAL_LINK_FAE, 1
 	setspeaker SP_NAME_FAE
 	msgbox Route103_Text_FaeIntroduction, MSGBOX_DEFAULT
+	setspeaker SP_NAME_NONE
 	giveitem ITEM_POTION, 2
 	setspeaker SP_NAME_FAE
 	msgbox Route103_Text_FaeComeFindMe, MSGBOX_DEFAULT
@@ -402,12 +403,12 @@ Route103_EventScript_Fae::
 	msgbox Route103_Text_FaeHangOut, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, Route103_EventScript_FaeDeclineHangOut
 	closemessage
-	fadescreen FADE_TO_BLACK
+	fadescreenswapbuffers FADE_TO_BLACK
 	delay 30
-	fadescreen FADE_FROM_BLACK
+	fadescreenswapbuffers FADE_FROM_BLACK
 	setspeaker SP_NAME_FAE
 	call_if_le VAR_0x8004, 1, Route103_EventScript_FaeScene_Orbs
-	call_if_ge VAR_0x8004, 2, Route103_EventScript_FaeScene_Trapinch
+	call_if_ge VAR_0x8004, 2, Route103_EventScript_FaeScene_Chingling
 	sociallink_addpoints SOCIAL_LINK_FAE, 8
 	call_if_eq VAR_RESULT, TRUE, Route103_EventScript_FaeRankUp
 	release
@@ -434,8 +435,8 @@ Route103_EventScript_FaeScene_Orbs::
 	msgbox Route103_Text_FaeSceneOrbs, MSGBOX_DEFAULT
 	return
 
-Route103_EventScript_FaeScene_Trapinch::
-	msgbox Route103_Text_FaeSceneTrapinch, MSGBOX_DEFAULT
+Route103_EventScript_FaeScene_Chingling::
+	msgbox Route103_Text_FaeSceneChingling, MSGBOX_DEFAULT
 	return
 
 @ Fae gives a small gift the first time her link reaches certain ranks.
@@ -452,8 +453,9 @@ Route103_EventScript_FaeRankUp::
 
 Route103_EventScript_FaeGiftRank2::
 	setspeaker SP_NAME_FAE
-	msgbox Route103_Text_FaeGiftSoftSand, MSGBOX_DEFAULT
-	giveitem ITEM_SOFT_SAND
+	msgbox Route103_Text_FaeGiftSootheBell, MSGBOX_DEFAULT
+	setspeaker SP_NAME_NONE
+	giveitem ITEM_SOOTHE_BELL
 	return
 
 Route103_Text_FaeCallsOut:
@@ -480,7 +482,7 @@ Route103_Text_FaeIntroduction:
 
 Route103_Text_FaeComeFindMe:
 	.string "I'll be around here, training with\n"
-	.string "TRAPINCH. Come talk anytime!\p"
+	.string "CHINGLING. Come talk anytime!\p"
 	.string "And {PLAYER}… I've got a good\n"
 	.string "feeling about you. I mean it!$"
 
@@ -513,13 +515,14 @@ Route103_Text_FaeSceneOrbs:
 	.string "But Grandpa never smiles when he\n"
 	.string "talks about it. Isn't that weird?$"
 
-Route103_Text_FaeSceneTrapinch:
-	.string "TRAPINCH was the first Pokémon\n"
-	.string "Grandpa ever gave me.\p"
-	.string "He said Ground types remember\n"
-	.string "everything the land has seen.\p"
-	.string "I think that's why it's so stubborn.\n"
-	.string "It's carrying a lot of memories!\p"
+Route103_Text_FaeSceneChingling:
+	.string "CHINGLING hatched from an Egg\n"
+	.string "Grandma found at the summit.\p"
+	.string "The CHIMECHO up there ring every\n"
+	.string "evening. Grandma says the sound\l"
+	.string "soothes the spirits on the mountain.\p"
+	.string "Someday CHINGLING will ring like\n"
+	.string "that too. I just know it!\p"
 	.string "…Hey, {PLAYER}. Thanks for always\n"
 	.string "listening to me ramble.$"
 
@@ -527,8 +530,9 @@ Route103_Text_FaeBondGrew:
 	.string "Your bond with FAE grew stronger!\n"
 	.string "(Rank {STR_VAR_1})$"
 
-Route103_Text_FaeGiftSoftSand:
+Route103_Text_FaeGiftSootheBell:
 	.string "Oh! I want you to have this.\p"
-	.string "It's sand from the foot of MT. PYRE.\n"
-	.string "Grandma says it brings good luck\l"
-	.string "to Ground-type moves!$"
+	.string "Grandma made it from an old chime\n"
+	.string "at the top of MT. PYRE.\p"
+	.string "It helps Pokémon feel close to\n"
+	.string "whoever is carrying it!$"

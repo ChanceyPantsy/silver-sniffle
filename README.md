@@ -93,13 +93,15 @@ Linking a legendary after a scripted encounter:
 
 Fae is the granddaughter of the Mt. Pyre orb keepers. She's staying in Oldale and wants to see you succeed.
 
-- **Meeting her:** she stands just north of Oldale on Route 103. On your first walk past, two wild Pokémon jump out and you fight them together as a tag battle, with her Trapinch beside your team. Her link starts at rank 1 and she gives you 2 Potions.
+- **Meeting her:** she stands just north of Oldale on Route 103. On your first walk past, two wild Pokémon jump out and you fight them together as a tag battle, with her Chingling beside your team. Her link starts at rank 1 and she gives you 2 Potions.
+- **Her link:** a plain friendship link with no type, so maxing it doesn't boost any shinies.
+- **Signature Pokémon:** Chingling, which evolves into Chimecho. In Emerald, Chimecho lives only at the summit of Mt. Pyre, where her grandparents keep the orbs.
 - **Hanging out:** talk to her afterwards to hang out. Each hang-out plays a scene for her current rank and adds points. When she reaches her rank cap she sends you off to adventure instead, so hang-outs can't be repeated for free points.
-- **Gifts:** she gives a small gift the first time her link reaches certain ranks. Rank 2 gives Soft Sand.
+- **Gifts:** she gives a small gift the first time her link reaches certain ranks. Rank 2 gives a Soothe Bell.
 - **Partner:** her team is `PARTNER_FAE` in `src/data/battle_partners.party`. Use it with `multi_fixed_2_vs_1`, `multi_fixed_2_vs_2` or the wild version seen in her intro.
 - **Name:** her name-box name is `SP_NAME_FAE` in `src/data/speaker_names.h`. Her link name is in `src/data/social_links.h`. Her scripts and dialogue are at the end of `data/maps/Route103/scripts.inc`.
 
-Her progress through the story is stored in `VAR_FAE_STATE`.
+Her progress through the story is stored in `VAR_FAE_STATE`. She uses Leaf's sprites as a placeholder; a battle partner needs a trainer picture with a back view, and only a few have one.
 
 ### Adding a link
 

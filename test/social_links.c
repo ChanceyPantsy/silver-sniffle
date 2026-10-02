@@ -152,12 +152,18 @@ TEST("(Social Links) A maxed Pokémon link boosts its own type")
     ResetSocialLinkTestState();
 }
 
-TEST("(Social Links) Fae is a Ground-type NPC link that starts capped at rank 2")
+TEST("(Social Links) Fae is a typeless NPC link that starts capped at rank 2")
 {
     ResetSocialLinkTestState();
     EXPECT_EQ(gSocialLinksInfo[SOCIAL_LINK_FAE].kind, SOCIAL_LINK_KIND_NPC);
-    EXPECT_EQ(SocialLink_GetType(SOCIAL_LINK_FAE), TYPE_GROUND);
+    EXPECT_EQ(SocialLink_GetType(SOCIAL_LINK_FAE), TYPE_NONE);
     EXPECT_EQ(SocialLink_GetRankCap(SOCIAL_LINK_FAE), 2);
+
+    // A typeless link never adds shiny rolls, even when maxed.
+    SocialLink_SetRank(SOCIAL_LINK_FAE, SOCIAL_LINK_MAX_RANK);
+    EXPECT_EQ(SocialLink_GetShinyRollsForSpecies(SPECIES_CHINGLING), 0);
+    EXPECT_EQ(SocialLink_GetShinyRollsForSpecies(SPECIES_TRAPINCH), 0);
+    ResetSocialLinkTestState();
 
     FlagSet(FLAG_BADGE01_GET);
     EXPECT_EQ(SocialLink_GetRankCap(SOCIAL_LINK_FAE), 3);
